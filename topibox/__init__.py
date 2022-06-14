@@ -3,9 +3,11 @@ import os
 from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 
 db = SQLAlchemy()
+migrate = Migrate(compare_type=True)
 
 
 def create_app(test_config=None):
@@ -13,12 +15,12 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(Config)
 
-    app.config.from_mapping(
-        # a default secret that should be overridden by instance config
-        SECRET_KEY="dev",
-        # store the database in the instance folder
-        DATABASE=os.path.join(app.instance_path, "topibox.sqlite"),
-    )
+    #app.config.from_mapping(
+    #    # a default secret that should be overridden by instance config
+    #    SECRET_KEY="dev",
+    #    # store the database in the instance folder
+    #    DATABASE=os.path.join(app.instance_path, "topibox.sqlite"),
+    #)
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -41,6 +43,7 @@ def create_app(test_config=None):
     from topibox import db
 
     db.init_app(app)
+    migrate.init_app(app, db, render_as_batch=True)
 
     # apply the blueprints to the app
     from topibox import auth, blog
