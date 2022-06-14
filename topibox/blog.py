@@ -8,7 +8,6 @@ from flask import url_for
 from werkzeug.exceptions import abort
 
 from topibox.auth import login_required
-from topibox.db import get_db
 
 bp = Blueprint("blog", __name__)
 

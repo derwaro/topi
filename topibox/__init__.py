@@ -1,16 +1,23 @@
 import os
 
 from flask import Flask
+from config import Config
+from flask_sqlalchemy import SQLAlchemy
+
+
+db = SQLAlchemy()
 
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(Config)
+
     app.config.from_mapping(
         # a default secret that should be overridden by instance config
         SECRET_KEY="dev",
         # store the database in the instance folder
-        DATABASE=os.path.join(app.instance_path, "topi.sqlite"),
+        DATABASE=os.path.join(app.instance_path, "topibox.sqlite"),
     )
 
     if test_config is None:
